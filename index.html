@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Run Node Code</title>
+    
+    <style>
+        #output {
+            margin-top: 20px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Run Node Code</h1>
+    <code>A collection of challenging issues in NodeJS</code>
+
+    <div id="codeBlocks"></div>
+    <div id="output"></div>
+
+    <script src="data.js"></script>
+<script src="main.js"></script> <!-- Your main script -->
+
+    <script>
+        data.forEach((item, index) => {
+            const codeBlocks = document.getElementById('codeBlocks');
+
+            const title = document.createElement('h2');
+            title.textContent = item.title;
+            codeBlocks.appendChild(title);
+
+            const description = document.createElement('p');
+            description.textContent = item.description;
+            codeBlocks.appendChild(description);
+
+            const textarea = document.createElement('textarea');
+            textarea.rows = 10;
+            textarea.cols = 50;
+            textarea.id = 'code' + index;
+            textarea.textContent = item.code;
+            codeBlocks.appendChild(textarea);
+            const button = document.createElement('button');
+button.textContent = 'Run';
+button.id = 'button' + index;  // Add this line
+button.onclick = () => runCode(index);
+codeBlocks.appendChild(button);
+
+        });
+
+
+        function runCode(index) {
+    const code = document.getElementById('code' + index).value;
+    const output = document.createElement('pre');
+    output.id = 'output' + index;
+
+    // Get the button element for this code block
+    const button = document.getElementById('button' + index);
+
+    // Insert the output element after the button
+    button.parentNode.insertBefore(output, button.nextSibling);
+
+    output.textContent = '';
+
+    // Capture console.log output
+    let log = console.log;
+    console.log = function () {
+        output.textContent += Array.prototype.join.call(arguments, ' ') + '\n';
+    };
+
+    try {
+        eval(code);
+    } catch (error) {
+        output.textContent = error;
+    }
+
+    // Restore console.log
+    console.log = log;
+}
+
+    </script>
+</body>
+
+</html>
